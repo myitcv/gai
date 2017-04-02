@@ -103,7 +103,12 @@ func main() {
 		tspecs = append(tspecs, readLines(fn)...)
 	}
 
-	specs = gotool.ImportPaths(specs)
+	infof("command line specs: %v\n", specs)
+	infof("command line tspecs: %v\n", tspecs)
+
+	if len(specs) > 0 {
+		specs = gotool.ImportPaths(specs)
+	}
 	tspecs = gotool.ImportPaths(tspecs)
 
 	if len(specs) == 0 && len(tspecs) == 0 {
@@ -304,6 +309,9 @@ func buildDeps(specs []string, tspecs []string) ([]*depPkg, []*depPkg, map[strin
 	if err != nil {
 		fatalf("could not get working directory: %v", err)
 	}
+
+	infof("specs: %v\n", specs)
+	infof("tspecs: %v\n", tspecs)
 
 	loadPkg := func(s string, test bool) (*depPkg, bool) {
 		if pkg, ok := seen[s]; ok {
