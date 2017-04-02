@@ -80,9 +80,9 @@ func main() {
 	flag.Parse()
 
 	defer func() {
-		if err, ok := recover().(error); ok {
-			log.Fatalln(err)
-		}
+		// if err, ok := recover().(error); ok {
+		// 	log.Fatalln(err)
+		// }
 	}()
 
 	wd, err := os.Getwd()
@@ -314,6 +314,10 @@ func buildDeps(specs []string, tspecs []string) ([]*depPkg, []*depPkg, map[strin
 	infof("tspecs: %v\n", tspecs)
 
 	loadPkg := func(s string, test bool) (*depPkg, bool) {
+		if s == "C" {
+			return nil, false
+		}
+
 		if pkg, ok := seen[s]; ok {
 			return pkg, false
 		}
@@ -371,6 +375,10 @@ func buildDeps(specs []string, tspecs []string) ([]*depPkg, []*depPkg, map[strin
 		}
 
 		for _, v := range toCheck {
+			if v == "C" {
+				continue
+			}
+
 			dpkg, isnew := loadPkg(v, false)
 
 			if isnew {
